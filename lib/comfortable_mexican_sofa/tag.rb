@@ -33,7 +33,7 @@ module ComfortableMexicanSofa::Tag
     # First capture group in the regex is the tag identifier
     # Namespace is the string separated by a dot. So if identifier is:
     # 'sidebar.about' namespace is: 'sidebar'
-    def initialize_tag(page, tag_signature)
+    def initialize_tag(page_content, tag_signature)
       if match = tag_signature.match(regex_tag_signature)
         
         params = begin
@@ -118,7 +118,7 @@ private
     tokens = content.to_s.scan(TOKENIZER_REGEX)
     tokens.collect do |tag_signature, text|
       if tag_signature
-        if tag = self.initialize_tag(page, tag_signature)
+        if tag = self.initialize_tag(page_content, tag_signature)
           tag.parent = parent_tag if parent_tag
           if tag.ancestors.select{|a| a.id == tag.id}.blank?
             page_content.tags << tag

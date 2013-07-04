@@ -82,7 +82,9 @@ protected
   end
 
   def build_cms_page
-    @page = @site.pages.new(page_params)
+    @page         = @site.pages.new(page_params)
+    @page_content = Cms::PageContent.new(:page => @page)
+    
     @page.parent ||= (@site.pages.find_by_id(params[:parent_id]) || @site.pages.root)
     @page.layout ||= (@page.parent && @page.parent.layout || @site.layouts.first)
   end

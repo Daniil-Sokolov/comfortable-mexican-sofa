@@ -1,5 +1,6 @@
 - namespace = { }
-- tags = @page.tags(true).select{|t| t.is_cms_block?}.uniq{|t| t.identifier} 
+- tags = @page_content.tags(true).select{|t| t.is_cms_block?}.uniq{|t| t.identifier}
+
 - tags.each do |tag|
   - namespace[tag.namespace || 'default'] ||= []
   - namespace[tag.namespace || 'default'] << tag
@@ -11,6 +12,7 @@
       = t('.no_tags').html_safe
   
   - else
+    
     = fields_for :blocks, nil, :builder => ComfortableMexicanSofa::FormBuilder do |cms_blocks|
       
       .tabbable
@@ -24,5 +26,5 @@
           - namespace.each_with_index do |(name, tags), index|
             .tab-pane{:id => "ns-#{name}", :class => index == 0 ? 'active' : nil}
               - tags.each do |tag|
-                = cms_blocks.send(tag.class.to_s.demodulize.underscore, tag, block_index) rescue nil
+                = cms_blocks.send(tag.class.to_s.demodulize.underscore, tag, block_index)
                 - block_index += 1
