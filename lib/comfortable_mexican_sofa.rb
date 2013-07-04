@@ -13,8 +13,6 @@
   'comfortable_mexican_sofa/fixtures',
   'comfortable_mexican_sofa/extensions/rails',
   'comfortable_mexican_sofa/extensions/acts_as_tree',
-  'comfortable_mexican_sofa/extensions/has_revisions',
-  'comfortable_mexican_sofa/extensions/is_mirrored',
   'comfortable_mexican_sofa/extensions/is_categorized'
 ].each do |path|
   require File.expand_path(path, File.dirname(__FILE__))

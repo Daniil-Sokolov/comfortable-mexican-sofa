@@ -5,7 +5,7 @@ class Cms::Block < ActiveRecord::Base
   self.table_name = 'cms_blocks'
   
   # -- Relationships --------------------------------------------------------
-  belongs_to :page
+  belongs_to :page_content
   has_many :files,
     :autosave   => true,
     :dependent  => :destroy

@@ -8,27 +8,18 @@ module ComfortableMexicanSofa::Routing
         get '/', :to => 'base#jump'
         resources :sites do
           resources :pages do
-            get  :form_blocks,    :on => :member
-            get  :toggle_branch,  :on => :member
-            put :reorder,         :on => :collection
-            resources :revisions, :only => [:index, :show, :revert] do
-              put :revert, :on => :member
-            end
+            get :form_blocks,   :on => :member
+            get :toggle_branch, :on => :member
+            put :reorder,       :on => :collection
           end
           resources :files do
             put :reorder, :on => :collection
           end
           resources :layouts do
             put :reorder, :on => :collection
-            resources :revisions, :only => [:index, :show, :revert] do
-              put :revert, :on => :member
-            end
           end
           resources :snippets do
             put :reorder, :on => :collection
-            resources :revisions, :only => [:index, :show, :revert] do
-              put :revert, :on => :member
-            end
           end
           resources :categories
         end

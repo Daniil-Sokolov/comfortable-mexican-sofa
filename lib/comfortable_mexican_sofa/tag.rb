@@ -13,7 +13,7 @@ module ComfortableMexicanSofa::Tag
   TOKENIZER_REGEX   = /(\{\{\s*cms:[^{}]*\}\})|((?:\{?[^{])+|\{+)/
   IDENTIFIER_REGEX  = /\w+[\-\.\w]+\w+/
   
-  attr_accessor :page,
+  attr_accessor :page_content,
                 :identifier,
                 :namespace,
                 :params,
@@ -43,10 +43,10 @@ module ComfortableMexicanSofa::Tag
         end.map{|p| p.gsub(/\\|'/) { |c| "\\#{c}" } }
         
         tag = self.new
-        tag.page        = page
-        tag.identifier  = match[1]
-        tag.namespace   = (ns = tag.identifier.split('.')[0...-1].join('.')).blank?? nil : ns
-        tag.params      = params
+        tag.page_content  = page_content
+        tag.identifier    = match[1]
+        tag.namespace     = (ns = tag.identifier.split('.')[0...-1].join('.')).blank?? nil : ns
+        tag.params        = params
         tag
       end
     end
@@ -87,8 +87,8 @@ module ComfortableMexicanSofa::Tag
     
     # Find or initialize Cms::Block object
     def block
-      page.blocks.detect{|b| b.identifier == self.identifier.to_s} || 
-      page.blocks.build(:identifier => self.identifier.to_s)
+      page_content.blocks.detect{|b| b.identifier == self.identifier.to_s} || 
+      page_content.blocks.build(:identifier => self.identifier.to_s)
     end
     
     # Checks if this tag is using Cms::Block
@@ -114,15 +114,15 @@ private
   # Scanning provided content and splitting it into [tag, text] tuples.
   # Tags are processed further and their content is expanded in the same way.
   # Tags are defined in the parent tags are ignored and not rendered.
-  def self.process_content(page, content = '', parent_tag = nil)
+  def self.process_content(page_content, content = '', parent_tag = nil)
     tokens = content.to_s.scan(TOKENIZER_REGEX)
     tokens.collect do |tag_signature, text|
       if tag_signature
         if tag = self.initialize_tag(page, tag_signature)
           tag.parent = parent_tag if parent_tag
           if tag.ancestors.select{|a| a.id == tag.id}.blank?
-            page.tags << tag
-            self.process_content(page, tag.render, tag)
+            page_content.tags << tag
+            self.process_content(page_content, tag.render, tag)
           end
         end
       else
